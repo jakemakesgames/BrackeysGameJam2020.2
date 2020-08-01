@@ -5,48 +5,35 @@ using TMPro;
 
 public class TimeManager : MonoBehaviour
 {
-    public bool isRewinding = false;
+    public bool isRewinding = false; // are we currently rewinding?
     
-    List<PointInTime> pointsInTime;
+    List<PointInTime> pointsInTime; // a list of PointsInTime (refer to PointInTime class)
 
     public float recordTime = 5f;
-
-    [Header("LIVES")]
-    public int rewindsRemaining;
-    public TMP_Text respawnText;
-    public GameObject gameOverText;
 
     void Start()
     {
         pointsInTime = new List<PointInTime>();
-        gameOverText.SetActive(false);
     }
 
     void Update()
     {
+        // if the enter key is being pressed down, call the StartRewind function
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            rewindsRemaining--;
             StartRewind();
         }
         
+        // if the enter key has been released, call the StopRewind function
         if (Input.GetKeyUp(KeyCode.Return))
         {
             StopRewind();
         }
-
-        if (rewindsRemaining <= 0)
-        {
-            rewindsRemaining = 0;
-            
-            GameOver();
-        }
-
-        respawnText.text = "REMAINING REWINDS: " + rewindsRemaining.ToString();
     }
 
     void FixedUpdate() 
     {
+        // if we ARE rewinding, call the "Rewind" function, else call the "Record" function
         if (isRewinding)
         {
             Rewind();
@@ -58,8 +45,10 @@ public class TimeManager : MonoBehaviour
     
     void Rewind()
     {
-        if (pointsInTime.Count > 0 && rewindsRemaining >= 0)
+        // if the pointInTime count is GREATER THAN 0
+        if (pointsInTime.Count > 0)
         {
+            // add a point in time into the list at index 0, log the position and rotation of this object
             PointInTime pointInTime = pointsInTime[0];
             transform.position = pointInTime.position;
             transform.rotation = pointInTime.rotation;
@@ -67,11 +56,13 @@ public class TimeManager : MonoBehaviour
         } 
         else 
         {
+            // call the StopRewind function
             StopRewind();
         }
         
     }
 
+    // a function to Record the points in time
     void Record()
     {
         if (pointsInTime.Count > Mathf.Round(recordTime / Time.fixedDeltaTime))
@@ -84,20 +75,15 @@ public class TimeManager : MonoBehaviour
 
     void StartRewind()
     {
+        // ensure we set isRewinding to true
         isRewinding = true;
         PlayerController.instance.rb2D.isKinematic = true;
     }
 
     void StopRewind()
     {
+        // enduse we set isRewinding to false
         isRewinding = false;
         PlayerController.instance.rb2D.isKinematic = false;
-    }
-
-    public void GameOver()
-    {
-        gameOverText.SetActive(true);
-        PlayerController.instance.enabled = false;
-        return;
     }
 }
