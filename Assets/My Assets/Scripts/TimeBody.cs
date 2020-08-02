@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class TimeManager : MonoBehaviour
+public class TimeBody : MonoBehaviour
 {
     public bool isRewinding = false; // are we currently rewinding?
     
@@ -51,7 +51,6 @@ public class TimeManager : MonoBehaviour
         if (pointsInTime.Count > 0)
         {
             // add a point in time into the list at index 0, log the position and rotation of this object
-
 
             PointInTime pointInTime = pointsInTime[0];
             transform.position = pointInTime.position;
