@@ -11,6 +11,8 @@ public class TimeManager : MonoBehaviour
 
     public float recordTime = 5f;
 
+    public GameObject trail;
+
     void Start()
     {
         pointsInTime = new List<PointInTime>();
@@ -49,9 +51,13 @@ public class TimeManager : MonoBehaviour
         if (pointsInTime.Count > 0)
         {
             // add a point in time into the list at index 0, log the position and rotation of this object
+
+
             PointInTime pointInTime = pointsInTime[0];
             transform.position = pointInTime.position;
             transform.rotation = pointInTime.rotation;
+
+            Instantiate(trail, transform.position, transform.rotation);
             pointsInTime.RemoveAt(0);
         } 
         else 

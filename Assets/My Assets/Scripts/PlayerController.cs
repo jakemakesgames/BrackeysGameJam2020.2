@@ -6,6 +6,8 @@ public class PlayerController : MonoBehaviour
 {
     public static PlayerController instance; // create a static reference to itself
 
+    
+
     [Header("MOVEMENT")]
     public Rigidbody2D rb2D; // private Rigidbody 2D component
     private float moveInput; // a float to store the player input
