@@ -1,8 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
+using XboxCtrlrInput;
 
 [RequireComponent (typeof (Player))]
 public class PlayerInput : MonoBehaviour {
+
+	public bool gamepadOn;
+	public XboxController gamepad;
+
+	Vector2 directionalInput;
+	Vector2 directionalGamepadInput;
+
+	float x;
+	float y;
 
 	Player player;
 
@@ -11,14 +21,50 @@ public class PlayerInput : MonoBehaviour {
 	}
 
 	void Update () {
-		Vector2 directionalInput = new Vector2 (Input.GetAxisRaw ("Horizontal"), Input.GetAxisRaw ("Vertical"));
-		player.SetDirectionalInput (directionalInput);
 
-		if (Input.GetKeyDown (KeyCode.Space)) {
+		if (XCI.GetButtonDown(XboxButton.Back) && !gamepadOn)
+		{
+			gamepadOn = true;
+			Debug.Log("Gamepad: " + gamepadOn);
+		} else if (XCI.GetButtonDown(XboxButton.Back) && gamepadOn)
+		{
+			gamepadOn = false;
+			Debug.Log("Gamepad: " + gamepadOn);
+		}
+
+		if (!gamepadOn)
+		{
+			directionalInput = new Vector2 (Input.GetAxisRaw ("Horizontal"), Input.GetAxisRaw ("Vertical"));
+			player.SetDirectionalInput (directionalInput);
+
+			if (Input.GetKeyDown (KeyCode.Space)) {
 			player.OnJumpInputDown ();
-		}
-		if (Input.GetKeyUp (KeyCode.Space)) {
+			}
+
+			if (Input.GetKeyUp (KeyCode.Space)) {
 			player.OnJumpInputUp ();
+			}
 		}
+
+		if (gamepadOn)
+		{
+			x = XCI.GetAxisRaw(XboxAxis.LeftStickX);
+			y = XCI.GetAxisRaw(XboxAxis.LeftStickY);
+
+			directionalGamepadInput = new Vector2 (x, y);
+			player.SetDirectionalInput(directionalGamepadInput);
+
+			if (XCI.GetButtonDown(XboxButton.A))
+			{
+				player.OnJumpInputDown();
+			}
+
+			if (XCI.GetButtonUp(XboxButton.A))
+			{
+				player.OnJumpInputUp();
+			}
+		}
+
+		
 	}
 }
