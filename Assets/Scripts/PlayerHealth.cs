@@ -8,15 +8,44 @@ public class PlayerHealth : MonoBehaviour
     public GameObject[] bloodstains;
     public GameObject bloodFX;
 
+    PlayerInput playerInput;
+    Controller2D controller;
+
+    bool hasBeenHurt;
+
+    private float bleedoutTimer;
+    public float timeBtwmBleedout;
+
     Shake shake;
 
-    /// <summary>
-    /// Start is called on the frame when a script is enabled just before
-    /// any of the Update methods is called the first time.
-    /// </summary>
     void Start()
     {
+        controller = GetComponent<Controller2D> ();
         shake = GameObject.FindGameObjectWithTag("Shake").GetComponent<Shake>();
+        playerInput = FindObjectOfType<PlayerInput>();
+
+        hasBeenHurt = false;
+
+        bleedoutTimer = Time.time;
+    }
+
+    void LateUpdate() 
+    {
+        if (hasBeenHurt)
+        {
+            if (playerInput.directionalInput != Vector2.zero && controller.collisions.below  || controller.collisions.left || controller.collisions.right
+            || playerInput.directionalGamepadInput != Vector2.zero && controller.collisions.below || controller.collisions.left || controller.collisions.right)
+            {
+                if (Time.time - bleedoutTimer > timeBtwmBleedout)
+                {
+                    int rand = Random.Range(0, bloodstains.Length);
+
+                    Instantiate(bloodstains[rand], transform.position, transform.rotation);
+                    bleedoutTimer = Time.time;
+                }   
+                
+            }
+        }
     }
 
     void OnCollisionEnter2D(Collision2D other)
@@ -33,6 +62,8 @@ public class PlayerHealth : MonoBehaviour
             transform.position = respawnPoint.transform.position;
 
             Destroy(GFX, 5f);
+
+            hasBeenHurt = true;
         }
     }
 }

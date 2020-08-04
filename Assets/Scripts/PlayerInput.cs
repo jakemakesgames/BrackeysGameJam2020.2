@@ -8,8 +8,8 @@ public class PlayerInput : MonoBehaviour {
 	public bool gamepadOn;
 	public XboxController gamepad;
 
-	Vector2 directionalInput;
-	Vector2 directionalGamepadInput;
+	public Vector2 directionalInput;
+	public Vector2 directionalGamepadInput;
 
 	float x;
 	float y;
