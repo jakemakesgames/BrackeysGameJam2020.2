@@ -56,10 +56,11 @@ public class PlayerHealth : MonoBehaviour
 
             int rand = Random.Range(0, bloodstains.Length);
 
-            Instantiate(bloodstains[rand], transform.position, transform.rotation);
+            GameObject blood = Instantiate(bloodstains[rand], transform.position, transform.rotation) as GameObject;
             GameObject GFX = Instantiate(bloodFX, transform.position, transform.rotation) as GameObject;
 
             transform.position = respawnPoint.transform.position;
+            blood.gameObject.transform.parent = other.gameObject.transform;
 
             Destroy(GFX, 5f);
 
